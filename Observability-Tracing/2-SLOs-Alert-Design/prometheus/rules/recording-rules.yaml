@@ -1,0 +1,44 @@
+groups:
+- name: checkout-sli
+  rules:
+  - record: checkout:latency:ratio_rate5m
+    expr: |
+      sum(rate(http_request_duration_seconds_bucket{service="checkout-api", path="/checkout", le="0.5"}[5m]))
+      /
+      sum(rate(http_request_duration_seconds_count{service="checkout-api", path="/checkout"}[5m]))
+
+  - record: checkout:latency:ratio_rate30m
+    expr: |
+      sum(rate(http_request_duration_seconds_bucket{service="checkout-api", path="/checkout", le="0.5"}[30m]))
+      /
+      sum(rate(http_request_duration_seconds_count{service="checkout-api", path="/checkout"}[30m]))
+
+  - record: checkout:latency:ratio_rate6h
+    expr: |
+      sum(rate(http_request_duration_seconds_bucket{service="checkout-api", path="/checkout", le="0.5"}[6h]))
+      /
+      sum(rate(http_request_duration_seconds_count{service="checkout-api", path="/checkout"}[6h]))
+
+  - record: checkout:error:ratio_rate5m
+    expr: |
+      1 - (
+        sum(rate(http_request_total{service="checkout-api", path="/checkout", status=~"5.."}[5m]))
+        /
+        sum(rate(http_request_total{service="checkout-api", path="/checkout"}[5m]))
+      )
+
+  - record: checkout:error:ratio_rate30m
+    expr: |
+      1 - (
+        sum(rate(http_request_total{service="checkout-api", path="/checkout", status=~"5.."}[30m]))
+        /
+        sum(rate(http_request_total{service="checkout-api", path="/checkout"}[30m]))
+      )
+
+  - record: checkout:error:ratio_rate6h
+    expr: |
+      1 - (
+        sum(rate(http_request_total{service="checkout-api", path="/checkout", status=~"5.."}[6h]))
+        /
+        sum(rate(http_request_total{service="checkout-api", path="/checkout"}[6h]))
+      )

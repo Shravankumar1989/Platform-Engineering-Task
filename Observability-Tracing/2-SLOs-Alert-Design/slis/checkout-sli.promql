@@ -1,0 +1,11 @@
+# Latency SLI: % of requests faster than 500ms
+sum(rate(http_request_duration_seconds_bucket{service="checkout-api", path="/checkout", le="0.5"}[5m]))
+/
+sum(rate(http_request_duration_seconds_count{service="checkout-api", path="/checkout"}[5m]))
+
+# Error Rate SLI: % of successful requests (non-5xx)
+1 - (
+  sum(rate(http_request_total{service="checkout-api", path="/checkout", status=~"5.."}[5m]))
+  /
+  sum(rate(http_request_total{service="checkout-api", path="/checkout"}[5m]))
+)

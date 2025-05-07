@@ -1,0 +1,58 @@
+groups:
+- name: checkout-slo-alerts
+  rules:
+  - alert: CheckoutLatencySLOFastBurn
+    expr: |
+      (
+        checkout:latency:ratio_rate5m < 0.86 and
+        checkout:latency:ratio_rate30m < 0.86
+      )
+    for: 10m
+    labels:
+      severity: critical
+      team: checkout
+    annotations:
+      summary: "Checkout API latency SLO burning budget rapidly"
+      description: "Checkout API has been experiencing high latency for the last 30m, burning error budget at 14.4x rate (>86% requests taking >500ms)"
+
+  - alert: CheckoutLatencySLOSlowBurn
+    expr: |
+      (
+        checkout:latency:ratio_rate30m < 0.94 and
+        checkout:latency:ratio_rate6h < 0.94
+      )
+    for: 30m
+    labels:
+      severity: warning
+      team: checkout
+    annotations:
+      summary: "Checkout API latency SLO burning budget steadily"
+      description: "Checkout API has been experiencing elevated latency for the last 6h, burning error budget at 6x rate (>6% requests taking >500ms)"
+
+  - alert: CheckoutErrorSLOFastBurn
+    expr: |
+      (
+        checkout:error:ratio_rate5m < 0.986 and
+        checkout:error:ratio_rate30m < 0.986
+      )
+    for: 10m
+    labels:
+      severity: critical
+      team: checkout
+    annotations:
+      summary: "Checkout API error SLO burning budget rapidly"
+      description: "Checkout API has error rate >1.4% for the last 30m, burning error budget at 144x rate"
+
+  - alert: CheckoutErrorSLOSlowBurn
+    expr: |
+      (
+        checkout:error:ratio_rate30m < 0.994 and
+        checkout:error:ratio_rate6h < 0.994
+      )
+    for: 30m
+    labels:
+      severity: warning
+      team: checkout
+    annotations:
+      summary: "Checkout API error SLO burning budget steadily"
+      description: "Checkout API has error rate >0.6% for the last 6h, burning error budget at 6x rate"
