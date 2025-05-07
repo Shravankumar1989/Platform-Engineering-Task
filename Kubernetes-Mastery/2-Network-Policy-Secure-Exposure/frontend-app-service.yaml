@@ -1,0 +1,15 @@
+# Service to expose the deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: frontend
+spec:
+  selector:
+    app: frontend-app
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  type: ClusterIP

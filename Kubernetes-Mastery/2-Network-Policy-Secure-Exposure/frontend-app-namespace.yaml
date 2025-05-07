@@ -1,0 +1,7 @@
+# Namespace for frontend (for completeness)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend
+  labels:
+    kubernetes.io/metadata.name: frontend

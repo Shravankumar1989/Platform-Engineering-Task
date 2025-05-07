@@ -1,0 +1,30 @@
+# Network Policy to restrict access to only backend namespace with label access:true
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-network-policy
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend-app
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: backend
+      podSelector:
+        matchLabels:
+          access: "true"
+    # Allow traffic from Ingress controller to frontend app
+    - namespaceSelector:
+        matchLabels:
+          app: ingress-nginx
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/component: controller
+    ports:
+    - protocol: TCP
+      port: 8080

@@ -1,0 +1,7 @@
+# Namespace for backend (for completeness)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+  labels:
+    kubernetes.io/metadata.name: backend
